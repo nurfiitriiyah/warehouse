@@ -1,16 +1,36 @@
-<form action="dashboard" method="post">
-    <table>
-        <tr>
-            <td>Username</td>
-            <td><input name="username" type="text"/></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input name="pasword" type="password"/></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="submit"/></td>
-        </tr>
-    </table>
-</form>
+<%- include ../view_layouts/header.ejs %>
+<div class="col-md-12 row" align="center">
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title">Gudang Pelita</h4>
+            <p class="card-category">Silahkan Login</p>
+        </div>
+        <div class="card-body">
+            <form action="dashboard" method="post">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Username</label>
+                            <input  name="username" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Password</label>
+                            <input name="pasword" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
