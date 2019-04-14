@@ -10,8 +10,12 @@ function checkID(req, res) {
 
 async function setID(req, res) {
     try {
-        await backend.check_login(req.body)
-        res.cookie('token', 'express').render('view_dashboard/dashboard');
+        var login =  await backend.check_login(req.body)
+        if(login.status === "ok" ){
+            res.cookie('token', login.token).render('view_dashboard/dashboard');
+        }else{
+            res.render('view_dashboard/login', { message: login.message });
+        }
     } catch (e) {
         console.log(e)
     }

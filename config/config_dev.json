@@ -1,0 +1,6 @@
+{
+    "jwt_conf": {
+        "secret": "$2y$12$kbhdicXLYrVpGq2Sjj81h.bkT2iLWHlerUmPJ2Rdd0AmY50E1KwyG",
+        "expired": 300000
+    }
+}
