@@ -1,0 +1,136 @@
+<%- include ../view_layouts/header.ejs %>
+<%- include ../view_layouts/sidebar.ejs %>
+<div class="row col-md-12">
+    <div class="col-md-4">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Tambah Data
+        </button>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="row col-md-12">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Nama Customer</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Jenis Barang</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Tanggal</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary pull-right">Cari</button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-12">
+                    <table class="table">
+                        <tr>
+                            <td>No</td>
+                            <td>Tanggal</td>
+                            <td>PIC</td>
+                            <td>Total(Kg)</td>
+                            <td>Total(Rp)</td>
+                            <td>Aksi</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Tambah Data</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="add_data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Total(Kg)</label>
+                                    <input name="total" type="number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Total(Rp)</label>
+                                    <input name="amount" id="total_amount" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        insertData();
+    });
+
+    function insertData() {
+        $("#add_data").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/inv/insert",
+                type: "POST",
+                data: {
+                    total: $("input[name=total]").val(),
+                    amount: $("input[name=total]").val(),
+                },
+                cache: false,
+                success: function (data) {
+                    if(data.status === "nok"){
+                        swal("Gagal",data.message,"error");
+                    }
+                    else{
+                        localStorage.setItem("notification", data.message);
+                        $(location).attr('href', "/inv");
+                    }
+                }
+            });
+
+        });
+
+    }
+
+    document.getElementById("total_amount").onkeyup = function () {
+        if (this.value.length > 0) {
+            this.value = parseFloat(this.value.replace(/,/g, ""))
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        } else {
+            this.value = "0";
+        }
+    }
+</script>
+<%- include ../view_layouts/footer.ejs %>
