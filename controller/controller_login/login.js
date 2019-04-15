@@ -2,19 +2,23 @@ const backend = require("../../backend/backend_login/login")
 const backendCheckRole = require("../../backend/backend_helper/jwt")
 
 async function checkID(req, res) {
-    try{
+    try {
         if (req.cookies.token) {
             var req_url = req.baseUrl;
-            var checkRole = await backendCheckRole.checkRole(req_url,req.cookies.token)
-            if(checkRole.status === "ok" ){
+            var checkRole = await backendCheckRole.checkRole(req_url, req.cookies.token)
+            if (checkRole.status === "ok") {
                 res.render('view_dashboard/dashboard');
-            }else{
-                res.render('404');
+            } else {
+                if (checkRole.message === "Failed Authenticated") {
+                    res.clearCookie('token').render('view_dashboard/login');
+                } else {
+                    res.render('404');
+                }
             }
         } else {
             res.render('view_dashboard/login');
         }
-    }catch (e) {
+    } catch (e) {
         res.render('404');
 
     }

@@ -13,10 +13,19 @@ async function authCheck(token) {
     } else {
         try {
             await jwt.verify(token, config.jwt_conf.secret, function (err, decoded) {
-                res = {
-                    status: "ok",
-                    data: decoded
+                if (err) {
+                    res = {
+                        status: "nok",
+                        message: 'Failed Authenticated'
+                    }
                 }
+                else {
+                    res = {
+                        status: "ok",
+                        data: decoded
+                    }
+                }
+
             });
             return res;
 
