@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("../../config/config_dev");
 const knex = require("../../helper/knex");
+
 async function authCheck(token) {
     var res;
     if (!token) {
@@ -30,32 +31,38 @@ async function authCheck(token) {
     }
 }
 
-async function checkRole(data, role) {
+async function checkRole(data, token) {
     var res;
     try {
-        var query = await knex.select('*')
-            .from('tb_menu_all as all')
-            .join('tb_menu_matrix as matrix', 'all.menu_id', 'matrix.menu_id')
-            .where({'all.menu_action': data}, {'matrix,role_id': role}, {'matrix.matrix_status': '1'})
-        if (query.length > 0) {
-            res = {
-                status: "ok",
-                data: query
+        var checkAuth = await authCheck(token);
+        if (checkAuth.status === "ok") {
+            var query = await knex.select('menu_action', 'menu_label')
+                .from('tb_menu_all as alls')
+                .join('tb_menu_matrix as matrix', 'alls.menu_id', 'matrix.menu_id')
+                .where({'menu_action': data , 'role_id' : checkAuth.data.role,'matrix_status': 1})
+            if (query.length > 0) {
+                res = {
+                    status: "ok"
+                }
+            } else {
+                res = {
+                    status: "nok",
+                    message: "404"
+                }
             }
         } else {
             res = {
                 status: "nok",
-                message: "404"
+                message: checkAuth.message
             }
         }
-        console.log(res)
+        return res;
     } catch (e) {
         res = {
             status: "nok",
             message: e
         }
-        console.log(res)
-
+        return res;
     }
 }
 
