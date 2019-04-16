@@ -47,7 +47,45 @@ async function insertInv(req, res) {
     }
 }
 
+async function getListInv(req, res, next) {
+    let draw = req.query.draw;
+    let start = parseInt(req.query.start);
+    let length = parseInt(req.query.length);
+    let order = req.query.order;
+
+    let custom_search = {
+        search_tanggal: req.query.search_tanggal
+    };
+    if (req.cookies.token) {
+        var listInv = await backend.getListInvoice(start, length, draw, order, custom_search, req.cookies.token)
+        res.json({
+            draw: draw,
+            recordsTotal: listInv.recordsTotal,
+            recordsFiltered: listInv.recordsFiltered,
+            data: listInv.data
+        });
+    } else {
+        res.render('view_dashboard/login');
+    }
+}
+
+async function getDetail(req, res, id) {
+    if (req.cookies.token) {
+        var detailInv = await backend.getDetailInvoice(req.query.id, req.cookies.token)
+        console.log(detailInv)
+        if (detailInv.status === "ok") {
+            res.json(detailInv);
+        } else {
+            res.render('404');
+        }
+    } else {
+        res.render('view_dashboard/login');
+    }
+}
+
 module.exports = {
+    getDetail,
     getInv,
+    getListInv,
     insertInv
 }
